@@ -454,29 +454,34 @@ fn process_names(
         name_bytes.push(0);
 
         // Compute val_base2 (team + prefix shuffle)
+        let name_len = total_len_for_shuffle;
         let mut val_base2 = [0u8; N];
+        val_base2.copy_from_slice(val_base);
+        let mut j_pre: usize = name_len;
+        let mut s_pre: u8 = 0;
         {
-            val_base2.copy_from_slice(val_base);
             let mut s: u8 = 0;
-            let name_len = total_len_for_shuffle;
-            let mut j = name_len;
+            let mut j: usize = name_len;
             for ip in 0..prelen {
-                let byte_at_j = if j < name_len { name_bytes[j] } else { 0 };
-                s = s.wrapping_add(byte_at_j).wrapping_add(val_base2[ip]);
+                let bv = if j < name_bytes.len() { name_bytes[j] } else { 0 };
+                s = s.wrapping_add(bv).wrapping_add(val_base2[ip]);
                 val_base2.swap(ip, s as usize);
-                j += 1;
-                if j > name_len { j = 0; }
+                j = (j + 1) % (name_len + 1);
             }
+            j_pre = j;
+            s_pre = s;
         }
 
         let mut name_base = [0u8; 128];
 
-        // Fast load with early pruning
+        // Fast load with early pruning (matches C++ load_name with prefix continuation)
         let v_opt = fast_load_and_check(
             &mut val_base2,
             prelen,
-            total_len_for_shuffle,
+            name_len,
             &name_bytes,
+            j_pre,
+            s_pre,
             &mut name_base,
         );
 
@@ -525,23 +530,41 @@ fn fast_load_and_check(
     pre_len: usize,
     total_len: usize,
     name_bytes: &[u8],
+    j_pre: usize,
+    s_pre: u8,
     name_base: &mut [u8; 128],
 ) -> Option<u32> {
     let mut val = *val_base2;
 
-    let total_len_p1 = total_len + 1;
-    let mut s: u8 = 0;
+    // C++ load_name has TWO passes:
+    // Pass 1: for (int i=i_pre,j=j_pre; i < N; i++,j++) { s += name[j] + val[i]; swap; if(j==NAMELEN) j=-1; }
+    // Pass 2: for (int i = s = 0, j = NAMELEN; i < N; i++,j++) { s += name[j] + val[i]; swap; if(j==NAMELEN) j=-1; }
+    // 
+    // In C++ for-loop: body executes, then if(j==NAMELEN) j=-1, then j++ at end of iteration
+    // So: j=NAMELEN → body reads name[NAMELEN]=0 → j==NAMELEN → j=-1 → j++ → j=0
+    // j cycles through [0..=NAMELEN] with name[NAMELEN]=0
+    // j wraps: 0,1,...,NAMELEN-1,NAMELEN→reset→0,1,...
+    // Effectively: j = (j + 1) % (NAMELEN + 1) after each iteration
+    // where name[NAMELEN] = 0 (null terminator)
+
+    let mut s: u8 = s_pre;
+    let mut j: usize = j_pre;
+    
     for i in pre_len..N {
-        let j = (i - pre_len) % total_len_p1;
-        s = s.wrapping_add(name_bytes[j]).wrapping_add(val[i]);
+        let bv = if j < name_bytes.len() { name_bytes[j] } else { 0 };
+        s = s.wrapping_add(bv).wrapping_add(val[i]);
         val.swap(i, s as usize);
+        j = (j + 1) % (total_len + 1);
     }
 
+    // Pass 2: fresh start, i=0..N, j=NAMELEN, s=0
     s = 0;
+    let mut j2 = total_len;
     for i in 0..N {
-        let j = i % total_len_p1;
-        s = s.wrapping_add(name_bytes[j]).wrapping_add(val[i]);
+        let bv = if j2 < name_bytes.len() { name_bytes[j2] } else { 0 };
+        s = s.wrapping_add(bv).wrapping_add(val[i]);
         val.swap(i, s as usize);
+        j2 = (j2 + 1) % (total_len + 1);
     }
 
     let mut q_len: isize = -1;

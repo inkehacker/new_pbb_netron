@@ -211,7 +211,7 @@ fn main() {
         let mut collect_str2 = String::new();
         stdin.lock().read_line(&mut collect_str2).unwrap();
         let cv: Vec<i32> = collect_str2.split_whitespace().filter_map(|s| s.parse().ok()).collect();
-        collect_8v_min = cv.get(0).copied().unwrap_or(777);
+        collect_8v_min = cv.get(0).copied().unwrap_or(700);
         collect_7v_min = cv.get(1).copied().unwrap_or(2000);
         collect_hl_min = cv.get(2).copied().unwrap_or(93);
         collect_hp8v_min = cv.get(3).copied().unwrap_or(741);
