@@ -1,0 +1,326 @@
+<!DOCTYPE html><html><head>
+    <title>Chapter 2 测号技术</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="file:///c:\Users\12115\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.8.13\crossnote\dependencies\katex\katex.min.css">
+
+    <style>
+    code[class*=language-],pre[class*=language-]{color:#333;background:0 0;font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.4;-moz-tab-size:8;-o-tab-size:8;tab-size:8;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:.8em;overflow:auto;border-radius:3px;background:#f5f5f5}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal;background:#f5f5f5}.token.blockquote,.token.comment{color:#969896}.token.cdata{color:#183691}.token.doctype,.token.macro.property,.token.punctuation,.token.variable{color:#333}.token.builtin,.token.important,.token.keyword,.token.operator,.token.rule{color:#a71d5d}.token.attr-value,.token.regex,.token.string,.token.url{color:#183691}.token.atrule,.token.boolean,.token.code,.token.command,.token.constant,.token.entity,.token.number,.token.property,.token.symbol{color:#0086b3}.token.prolog,.token.selector,.token.tag{color:#63a35c}.token.attr-name,.token.class,.token.class-name,.token.function,.token.id,.token.namespace,.token.pseudo-class,.token.pseudo-element,.token.url-reference .token.variable{color:#795da3}.token.entity{cursor:help}.token.title,.token.title .token.punctuation{font-weight:700;color:#1d3e81}.token.list{color:#ed6a43}.token.inserted{background-color:#eaffea;color:#55a532}.token.deleted{background-color:#ffecec;color:#bd2c00}.token.bold{font-weight:700}.token.italic{font-style:italic}.language-json .token.property{color:#183691}.language-markup .token.tag .token.punctuation{color:#333}.language-css .token.function,code.language-css{color:#0086b3}.language-yaml .token.atrule{color:#63a35c}code.language-yaml{color:#183691}.language-ruby .token.function{color:#333}.language-markdown .token.url{color:#795da3}.language-makefile .token.symbol{color:#795da3}.language-makefile .token.variable{color:#183691}.language-makefile .token.builtin{color:#0086b3}.language-bash .token.keyword{color:#0086b3}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}html body{font-family:'Helvetica Neue',Helvetica,'Segoe UI',Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ol,html body>ul{margin-bottom:16px}html body ol,html body ul{padding-left:2em}html body ol.no-list,html body ul.no-list{padding:0;list-style-type:none}html body ol ol,html body ol ul,html body ul ol,html body ul ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:700;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::after,html body code::before{letter-spacing:-.2em;content:'\00a0'}html body pre>code{padding:0;margin:0;word-break:normal;white-space:pre;background:0 0;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:after,html body pre code:before,html body pre tt:after,html body pre tt:before{content:normal}html body blockquote,html body dl,html body ol,html body p,html body pre,html body ul{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body code,html body pre{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview ul{list-style:disc}.markdown-preview ul ul{list-style:circle}.markdown-preview ul ul ul{list-style:square}.markdown-preview ol{list-style:decimal}.markdown-preview ol ol,.markdown-preview ul ol{list-style-type:lower-roman}.markdown-preview ol ol ol,.markdown-preview ol ul ol,.markdown-preview ul ol ol,.markdown-preview ul ul ol{list-style-type:lower-alpha}.markdown-preview .newpage,.markdown-preview .pagebreak{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center!important}.markdown-preview:not([data-for=preview]) .code-chunk .code-chunk-btn-group{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .status{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0;min-height:100vh}@media screen and (min-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{font-size:14px!important;padding:1em}}@media print{html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div,html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% - 300px);padding:2em calc(50% - 457px - 300px / 2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+    </style>
+    <!-- The content below will be included at the end of the <head> element. --><script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function () {
+  // your code here
+});
+
+</script></head><body for="html-export">
+ <div id="container" style="background-color:#ffffff;height:9000px;width:1000px;float:left;">
+  
+ <div id="header" style="background-color:rgb(255, 255, 255);">
+ <h1 style="margin-bottom:0;"><center>Chapter 2 测号技术</center></h1></div>
+  
+ <div id="menu" style="background-color:#ffffff;height:8000px;width:250px;float:left;">
+ <b><a href="index.html">返回目录</a></b><br><br><br>
+ <a href="#2.1">2.1 衡量名字/战组的强弱</a><br><br>
+ <a href="#2.2">2.2 测号技术发展史</a><br>
+ <a href="#2.2.1">&nbsp;&nbsp;&nbsp;&nbsp;手测时代</a><br>
+ <a href="#2.2.2">&nbsp;&nbsp;&nbsp;&nbsp;按键精灵时代</a><br>
+ <a href="#2.2.3">&nbsp;&nbsp;&nbsp;&nbsp;官测时代</a><br>
+ <a href="#2.2.4">&nbsp;&nbsp;&nbsp;&nbsp;脚本文测时代</a><br>
+ <a href="#2.2.5">&nbsp;&nbsp;&nbsp;&nbsp;一体机文测时代</a><br>
+ <a href="#2.2.6">&nbsp;&nbsp;&nbsp;&nbsp;量子波动时代</a><br>
+ <a href="#2.2.7">&nbsp;&nbsp;&nbsp;&nbsp;过渡阶段</a><br>
+ <a href="#2.2.8">&nbsp;&nbsp;&nbsp;&nbsp;核测号器时代</a><br>
+ <a href="#2.2.9">&nbsp;&nbsp;&nbsp;&nbsp;GPU 测号</a><br><br>
+ 
+ <a href="#2.3">2.3 pl 测号器使用方法</a><br>
+ <a href="#2.3.1">&nbsp;&nbsp;&nbsp;&nbsp;首次测号</a><br>
+ <a href="#2.3.2">&nbsp;&nbsp;&nbsp;&nbsp;输入 0：随机模式</a><br>
+ <a href="#2.3.3">&nbsp;&nbsp;&nbsp;&nbsp;输入 1：顺序模式</a><br><br>
+
+ <a href="#2.4">2.4 开箱器与超强评/超强单脚本</a><br>
+ <a href="#2.4.1">&nbsp;&nbsp;&nbsp;&nbsp;开箱技术发展史</a><br>
+ <a href="#2.4.2">&nbsp;&nbsp;&nbsp;&nbsp;提升箱子的质量</a><br>
+ <a href="#2.4.3">&nbsp;&nbsp;&nbsp;&nbsp;超强单与超强评</a><br><br>
+ <a href="#2.5">2.5 测号单位制与出号率</a></div><br>
+  
+ <div id="content" style="background-color:#ffffff;height:8000px;width:700px;float:left;">
+    <blockquote>
+    <p>要在对战中取胜，关键是要找到一个足够强大的名字。</p>
+    </blockquote>
+    <h2 id="2.1">2.1 衡量名字/战组的强弱 </h2>
+    <ul>
+    <li>
+    <p>前面已经介绍过官方给出的四种评分。由于你在实战中遭遇的名字通常会较强，所以<strong>通常来说</strong>强评对名字的组队实力更有参考价值，强单对名字的单挑实力更有参考价值。</p>
+    </li>
+    <li>
+    <p>建议把评分测试至 100%，10% 测出来的评分误差较大，并且在大多数时候会比 100% 偏高。如果觉得测试一个 100% 所需时间过久，后面有相关工具的介绍。</p>
+    </li>
+    <li>
+    <p>由于天卫和普通名字差别很大，强单高不一定说明进行玩家之间战斗时的实战强，比如一个强单 7000+ 的净化号（例如 <code>十六夜咲夜 GD5VLRTL@Squall</code>）<strong>可能</strong>强度还不如强单 6500 的一些其他类型的号。对实战来说更有用的还是打其他较强的普通名字（指别的玩家的强号）的胜率。</p>
+    </li>
+    <li>
+    <p>通常来说，一个名字对另一个名字 60% 的胜率即可视为较高的胜率。但是 打单个强号的胜率高并不能说明号的强度，因为各类型的号之间存在克制关系，比如强幻术也可能打不过弱背刺。下面的三个名字之间的胜率就由于克制而形成了“石头剪刀布”的关系：</p>
+    </li>
+    </ul>
+    <pre data-role="codeBlock" data-info="txt" class="language-txt txt"><code>光YLqYQFwdtfCUl6J@Squall
+U&gt;7D3Ol7uWKIfTC@XJ联队
+江DuDSKcYnD3nB@Squall </code></pre><ul>
+    <li>多人组也是同样的道理，评分高并不意味着打其他队的多人组就更强。我们提供了超强单、超强评的脚本方便玩家测试一些对主流玩家的单挑号/多人组的胜率分布和平均胜率（详见2.4）。</li>
+    </ul>
+    <h2 id="2.2">2.2 测号技术发展史 </h2>
+    <h3 id="2.2.1">手测时代 </h3>
+    <p><strong>基于原理：八围高于 652 的号在小于等于 10 人的战斗中，在显示属性后会在末尾显示一个表情。</strong></p>
+    <p>由于名字竞技场官方教程中有类似“比较强的号通常会在最后有一个表情”的表述，我们可以每次枚举十个名字，查看有没有表情，取有表情的号测评分，评分高的保留。</p>
+    <p>每次输入十个号的格式可以由自己人为决定。通常会使用上十个号和这十个号改动所需要的操作较少且较为固定的格式，以提升速度。用快捷键 <code>Alt+1</code> 和 <code>Alt+2</code> 也能提升速度。</p>
+    <p>由于当时分身技能的数值设定有些不合理，导致存在一些八围不高（可能没有表情）但是分身概率/频率高，因此评分高实力强的号。在这类号被发掘出来后，手测可以加上一个步骤，在输入完名字开始战斗后按快进键，假如发现一个名字在战斗中分身了很多，那么也可以去测试评分。最著名的号应当为 <code>sinα=-0.056@SG</code>，当时评分为 7724，而第二名的评分不到 7300。很多这样测出来的强号都可以单挑一些被分身克制的 boss（比如蚊、尤里、史莱姆等）。</p>
+    <p>在作者调整平衡性将分身削弱后不再有快进测号的步骤。</p>
+    <p>速度：约几千到一万多每小时。</p>
+    <h3 id="2.2.2">按键精灵时代 </h3>
+    <p><strong>基于原理：将手测的过程使用按键精灵模拟。</strong></p>
+    <p>手测找有表情的号的过程比较固定，因此用第三方软件【按键精灵】模拟这一动作，解放双手实现自动化，并且可以优化手部动作速度的瓶颈。</p>
+    <p>相比于朴素手测劣势在于找分身号的过程比较难以量化，因此不太能用于寻找分身号。但是在作者调整平衡性将分身削弱后这个劣势不再存在。</p>
+    <p>速度：几万到二十几万每天。</p>
+    <h3 id="2.2.3">官测时代 </h3>
+    <p><strong>基于原理：作者更新了 <code>!test!</code> 寻找有表情的号的功能。</strong></p>
+    <p>按键精灵时代后期，玩家【滑稽】的速度已经达到了二十万每天以上，和其他人拉开差距，产生了一定的技术鸿沟。在这种背景下，作者更新了 <code>!test!</code> 能帮你寻找有表情的号的功能。</p>
+    <p>单开的速度并不算很快（作者确实表明压过速度）。但相比于按键精灵，可以开多个浏览器同时测，速度可以有所提升。</p>
+    <p>但是仍然不能挂机，这是相比于完整成熟按键精灵工具链的劣势。</p>
+    <p>速度：几十万每天。</p>
+    <h3 id="2.2.4">脚本文测时代 </h3>
+    <p><strong>基于原理：官测以及 javascript 脚本。</strong></p>
+    <p>由玩家【文哥】发明，故称为文测。原理是结合官测，使用 javascript 脚本，当一组号测完后将捕捉到的三级表情输出在 console 里，然后进行下一组测号。</p>
+    <p>实现了抓取三表的自动化，但评分仍然需要手动操作。</p>
+    <p>速度：几百万每天。</p>
+    <h3 id="2.2.5">一体机文测时代 </h3>
+    <p><strong>基于原理：文测。</strong></p>
+    <p>由玩家【文哥】在原来的脚本文测上改进。使用了合适的 UI，使得测号操作更加亲民化和方便化。后期增加了将抓取到的三表测评分 10% 并且高于一定阈值才输出来的功能。</p>
+    <p>省去了初步开箱的麻烦，但某种意义上也是失去了初步开箱的乐趣。</p>
+    <p>速度：几百万到近千万每天。</p>
+    <h3 id="2.2.6">量子波动时代 </h3>
+    <p><strong>基于原理：手测和 javascript。</strong></p>
+    <p>由玩家【贩钻石剑】提出、发明，由玩家【文哥】、【Hell】等人完善。</p>
+    <p>这个技术被称为量子波动的原因已难以考证，合理猜测是这个技术使用的时候屏幕会一直在闪，很像叠加态和不确定性。</p>
+    <p>不再基于官测，而是将手测的过程换成用 javascript 脚本实现，比按键精灵快很多，也比官方测号器快不少。同时也能测 10% 评分并输出高于一定阈值的号。</p>
+    <p>后期通过一些方式节省了部分渲染的时间（将捕获三表的方式改为接受输出三表的信号而不是寻找三表的图片），让速度变得更快。该技术被称为量子波动-β。</p>
+    <p>速度：几千万每天。</p>
+    <h3 id="2.2.7">过渡阶段 </h3>
+    <p><strong>基于原理：名竞源代码反混淆的部分破译。</strong></p>
+    <p>如何将量子波动技术变得更快？在部分破译名竞源代码的基础上，可以将代码进行适当改动来提升速度。一些可能得方法包括将输入小于等于 10 个号才会显示表情改成小于等于 8000，或者大幅削减名竞的渲染等。</p>
+    <p>速度：几千万到几十亿每天。</p>
+    <p>注意：该阶段的测号器均为内部测试时使用，并没有流出。</p>
+    <h3 id="2.2.8">核测号器时代 </h3>
+    <p><strong>基于原理：号的属性计算方式被找到。</strong></p>
+    <p>玩家【powerless】对名字竞技场原本代码进行了部分反混淆，并找到了计算号的属性部分的代码。由于原本算号是用网页代码写的，速度较慢。改用 c++ 之类的速度较快的语言重写，且彻底抛弃了渲染等其他的框架后，速度大幅提升。</p>
+    <p>值得一提的是，玩家【文哥】、【滑稽】等人在先前就已经研制了类似的技术，只不过因为代码实现原因常数较大速度略慢；但没有公开。</p>
+    <p>后来玩家【powerless】、【曙光】等人对原始代码进行进一步卡常，形成的测号器被称为【早期 pbb 测号器】。</p>
+    <p>后来根据 【powerless】 找到的算号核心代码，玩家可以根据自己的需求自己编写测号器。比较出名的是【pl 测号器】（由 【powerless】 发明）和【pbb 测号器】（主要由玩家【曙光】依据【早期 pbb 测号器】发明，【昀澤】等人进行改写）。</p>
+    <p>速度：几千亿到几万亿每天。</p>
+    <h3 id="2.2.9">GPU 测号 </h3>
+    <p>经过贴吧投票一致通过，该技术被封存。</p>
+    <h2 id="2.3">2.3 pl 测号器使用方法 </h2>
+    <p>目前 pl 测号器的封装程度较高，只需要玩家动手设置较少参数即可。</p>
+    <p>测号器文件可于 QQ 群内下载。或者点击<a href="files/powerless.zip" download="powerless.zip">这里</a>下载。</p>
+    <p>pl 可测号的格式为前缀（可选）+变化字符+后缀（可选）+@队名。</p>
+    <p><strong>使用前提醒：请关闭电脑的所有杀毒系统，或将 main.exe 加入它们的白名单。</strong></p>
+    <h3 id="2.3.1">首次测号 </h3>
+    <p>打开 main.exe 后，会见到如下场景。</p>
+    <p><img src="img/pl1.png" alt=""></p>
+    <p>首次使用测号器时，并无任何配置文件（上图打码部分为已有的配置文件，可以忽略），所以此时应<strong>输入</strong> <code>-1</code>，手动配置文件。</p>
+    <p><img src="img/pl2.png" alt=""></p>
+    <p>输入 <code>-1</code> 后，会出现如上场景，此时应<strong>输入你自己的战队名</strong>。</p>
+    <p><img src="img/pl3.png" alt=""></p>
+    <p>如上图，接下来会出现两种测号模式。</p>
+    <h3 id="2.3.2">输入 0：随机模式 </h3>
+    <ol>
+    <li><strong>输入你想要测的测号量</strong>（可以参考下一章”测号单位制“）；</li>
+    <li><strong>输入前缀</strong>；</li>
+    </ol>
+    <p><strong>输入</strong> <code>+</code> 即为无前缀。</p>
+    <p>注意 pl 并不会自动在前缀后加上空格，如果需要请自己输入。</p>
+    <ol start="3">
+    <li><strong>输入后缀</strong>；</li>
+    </ol>
+    <p><strong>输入</strong> <code>+</code> 即为无后缀。</p>
+    <p>注意 pl 也并不会在后缀前自动加上空格，如果需要请自己输入。</p>
+    <ol start="4">
+    <li><strong>输入可变部分长度</strong>；</li>
+    <li><strong>输入字符集</strong>；</li>
+    </ol>
+    <p>注意不要输入 <code>+</code>、<code>@</code>。</p>
+    <p>尽量不要输入 <code>?</code>，因为这有可能使你的名字出现 <code>???</code> 从而导致无法评分。</p>
+    <ol start="6">
+    <li>
+    <p><strong>输入八围阈值</strong>（低于该阈值的号将被忽略，理论上设置得高运行速度越快，但会显著增加漏掉低八维强号的概率，<strong>推荐阈值为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>652</mn></mrow><annotation encoding="application/x-tex">652</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">652</span></span></span></span></strong>）；</p>
+    </li>
+    <li>
+    <p>选择<strong>虚评</strong>作为筛号规则（虚评的详细介绍将在下一章给出）；</p>
+    </li>
+    <li>
+    <p><strong>输入虚评阈值</strong>（推荐阈值为 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4700</mn><mo>∼</mo><mn>5100</mn></mrow><annotation encoding="application/x-tex">4700\sim 5100</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">4700</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">5100</span></span></span></span>）；</p>
+    </li>
+    </ol>
+    <p><strong>注意 pl 内置的虚评是旧版，对幻术号的评分尤为不准确，所以强烈建议阈值放低，然后将输出结果用新虚评重新筛选一遍！</strong></p>
+    <ol start="9">
+    <li><strong>输入</strong> <code>-2</code>，结束配置；</li>
+    <li>如要保存，<strong>输入配置文件名</strong>；如不保存，<strong>输入</strong> <code>.</code></li>
+    </ol>
+    <h3 id="2.3.3">输入 1：顺序模式 </h3>
+    <ol>
+    <li><strong>输入测号区间</strong>；</li>
+    </ol>
+    <p>注意区间为<strong>左闭右开</strong>。</p>
+    <pre data-role="codeBlock" data-info="" class="language-text"><code>e.g.
+    假设号量共为 100000000000。
+    则单开测号器中区间应填 0 100000000000；
+    双开测号器中区间应分别填 0 50000000000 与 50000000000 100000000000。
+    以此类推。
+    注意到电脑如分大小核，大小核之间测号速度会有较大差异，可根据实际情况填写区间。
+    </code></pre><ol start="2">
+    <li><strong>输入前缀</strong>；</li>
+    <li><strong>输入后缀</strong>；</li>
+    <li><strong>输入可变部分长度</strong>；</li>
+    <li><strong>输入字符集</strong>；</li>
+    <li><strong>输入八围阈值</strong>；</li>
+    <li>选择<strong>虚评</strong>作为筛号规则；</li>
+    <li><strong>输入虚评阈值</strong>；</li>
+    <li><strong>输入</strong> <code>-2</code>，结束配置；</li>
+    <li>如要保存，<strong>输入配置文件名</strong>；如不保存，<strong>输入</strong> <code>.</code>；</li>
+    </ol>
+    <p>注意配置文件将保存在 <code>configs</code> 文件夹中。</p>
+    <ol start="11">
+    <li>完成以上步骤后，电脑将开始自动测号。</li>
+    </ol>
+    <p>注意输出文件将保存在 <code>out</code> 文件夹中。</p>
+    <p>注意使电脑一直处于开机状态，否则窗口将会被关闭。（视电脑情况决定，晚上一直开着测号器，有可能会缩短电脑寿命，或有小概率发生危险，请自己权衡）</p>
+    <h2 id="2.4">2.4 开箱器与超强评/超强单脚本 </h2>
+    <p>将待测号进行测评分数的行为（10% 或 100%）的行为，由于其很像游戏中的开宝箱，需要运气，并且在出强号时有惊喜的感觉，因此称为“开箱”。</p>
+    <h3 id="2.4.1">开箱技术发展史 </h3>
+    <p>最初的开箱技术为手开，将出现的有表情的号一个一个复制到名竞网站中进行 <code>!test!</code>。</p>
+    <p>后来通过 javascript 脚本，实现了自动化，可以进行挂机开箱，并且可以打开多个浏览器同时开箱，但速度无显著提升。</p>
+    <p>再后来通过改写名竞网站的源代码，可以将一些不必要的空闲时间利用起来提升速度。<br>
+    下面是一些使用这些技术的网站，测评分方法和 <a href="https://deepmess.com/namerena/">https://deepmess.com/namerena/</a> 相同（<code>!test!</code>）。<br>
+    大部分网站是只能测特定的精度的分数：<br>
+    1%：<a href="https://tinman00.github.io/1/namerena/">https://tinman00.github.io/1/namerena/</a><br>
+    10%：<a href="https://tinman00.github.io/10/namerena/">https://tinman00.github.io/10/namerena/</a><br>
+    100%：<a href="https://tinman00.github.io/100/namerena/">https://tinman00.github.io/100/namerena/</a><br>
+    2%：<a href="https://namerena.pages.dev/faster">https://namerena.pages.dev/faster</a><br>
+    5%：<a href="https://namerena.pages.dev/fast0">https://namerena.pages.dev/fast0</a><br>
+    10%：<a href="https://namerena.pages.dev/fast1">https://namerena.pages.dev/fast1</a><br>
+    25%：<a href="https://namerena.pages.dev/fastqt">https://namerena.pages.dev/fastqt</a><br>
+    100%：<a href="https://namerena.pages.dev/fast2">https://namerena.pages.dev/fast2</a><br>
+    10的幂次（和官方网站相同，可以一直往下测）：<a href="https://fast-namerena.pages.dev/">https://fast-namerena.pages.dev/</a></p>
+    <p>这些网站上同样可以使用 javascript 脚本。</p>
+    <p>下面是一份脚本，开头的几个参数可以根据注释自行修改。<br>
+    使用方法：将号复制进名竞的输入框（每行一个），按下 <code>F12</code> 键（这是电脑上的一个键，不是三个键！），将脚本复制进去，按回车键。注意相应精度需要对应的网站，否则可能会出现测得很慢浪费大量时间或者直接卡死的情况。</p>
+    <details>
+        <summary>展开代码</summary>
+        <pre data-role="codeBlock" data-info="js" class="language-javascript js"><code><span class="token keyword keyword-const">const</span> all <span class="token operator">=</span> <span class="token dom variable">document</span><span class="token punctuation">.</span><span class="token method function property-access">querySelector</span><span class="token punctuation">(</span><span class="token string">'#textdiv&gt;textarea'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">value</span><span class="token punctuation">.</span><span class="token method function property-access">split</span><span class="token punctuation">(</span><span class="token string">'\n'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword keyword-let">let</span> type <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span><span class="token comment">//1:pp 2:qp 3:qd 4:pd </span>
+<span class="token keyword keyword-let">let</span> suffix<span class="token operator">=</span><span class="token string">""</span><span class="token punctuation">;</span><span class="token comment">//后缀，比如说你想固定几个人枚举一个人配多人的时候用</span>
+<span class="token keyword keyword-let">let</span> acc<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">;</span><span class="token comment">//10% or 100%</span>
+<span class="token keyword keyword-let">let</span> chktime<span class="token operator">=</span><span class="token number">50</span><span class="token punctuation">;</span><span class="token comment">//每隔多少 ms chk 一次，建议测 10% 的时候设 50，100% 的时候设 300</span>
+<span class="token keyword keyword-let">let</span> outputmin<span class="token operator">=</span><span class="token number">6000</span><span class="token punctuation">;</span><span class="token comment">//输出的最低阈值</span>
+<span class="token keyword keyword-let">let</span> totnum<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span><span class="token comment">//你测试的几人组（单个人的 qp qd pp 等都是 1）</span>
+<span class="token keyword keyword-let">let</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword keyword-let">let</span> fi <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword keyword-let">let</span> result <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
+<span class="token keyword keyword-let">let</span> cur<span class="token operator">=</span><span class="token string">""</span><span class="token punctuation">;</span>
+<span class="token keyword keyword-let">let</span> avg<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword keyword-let">let</span> cnt<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword keyword-function">function</span> <span class="token function">check</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token keyword control-flow keyword-if">if</span> <span class="token punctuation">(</span>fi<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+ <span class="token keyword control-flow keyword-return">return</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword control-flow keyword-if">if</span> <span class="token punctuation">(</span><span class="token function">cw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">document</span><span class="token punctuation">.</span><span class="token method function property-access">querySelectorAll</span><span class="token punctuation">(</span><span class="token string">'span.u'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">length</span> <span class="token operator">&lt;=</span> acc<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+ <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+   <span class="token function">check</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">}</span><span class="token punctuation">,</span> chktime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword control-flow keyword-return">return</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword keyword-const">const</span> progress <span class="token operator">=</span> <span class="token function">cw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">document</span><span class="token punctuation">.</span><span class="token method function property-access">querySelectorAll</span><span class="token punctuation">(</span><span class="token string">'span.u'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword keyword-let">let</span> pos <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword control-flow keyword-for">for</span> <span class="token punctuation">(</span><span class="token keyword keyword-let">let</span> i <span class="token operator">=</span> acc<span class="token punctuation">;</span> i <span class="token operator">&lt;</span> progress<span class="token punctuation">.</span><span class="token property-access">length</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+ <span class="token keyword keyword-const">const</span> element <span class="token operator">=</span> progress<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+ <span class="token keyword control-flow keyword-if">if</span> <span class="token punctuation">(</span>element<span class="token punctuation">.</span><span class="token property-access">textContent</span><span class="token punctuation">.</span><span class="token method function property-access">split</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">===</span> <span class="token string">'》'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+               pos <span class="token operator">=</span> i<span class="token punctuation">;</span>
+   <span class="token keyword control-flow keyword-break">break</span><span class="token punctuation">;</span>
+ <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword control-flow keyword-if">if</span> <span class="token punctuation">(</span>pos <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+ <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+   <span class="token function">check</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">}</span><span class="token punctuation">,</span> chktime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword control-flow keyword-return">return</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword keyword-const">const</span> val <span class="token operator">=</span> progress<span class="token punctuation">[</span>pos<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token property-access">textContent</span><span class="token punctuation">.</span><span class="token method function property-access">split</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword control-flow keyword-if">if</span> <span class="token punctuation">(</span>cur <span class="token operator">!=</span> <span class="token function">cw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">document</span><span class="token punctuation">.</span><span class="token method function property-access">querySelectorAll</span><span class="token punctuation">(</span><span class="token string">'div.name'</span><span class="token punctuation">)</span><span class="token punctuation">[</span>totnum<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token property-access">textContent</span><span class="token operator">+</span><span class="token function">cw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">document</span><span class="token punctuation">.</span><span class="token method function property-access">querySelectorAll</span><span class="token punctuation">(</span><span class="token string">'div.name'</span><span class="token punctuation">)</span><span class="token punctuation">[</span>totnum<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token property-access">textContent</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword keyword-let">let</span> score<span class="token operator">=</span><span class="token function">parseInt</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword control-flow keyword-if">if</span> <span class="token punctuation">(</span>score<span class="token operator">&gt;=</span>outputmin<span class="token punctuation">)</span> result<span class="token operator">+=</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>all<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>val<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">"\n"</span><span class="token punctuation">;</span>
+             cnt<span class="token operator">+=</span><span class="token number">1</span><span class="token punctuation">;</span>
+             j<span class="token operator">++</span><span class="token punctuation">;</span>
+             cur <span class="token operator">=</span> <span class="token function">cw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">document</span><span class="token punctuation">.</span><span class="token method function property-access">querySelectorAll</span><span class="token punctuation">(</span><span class="token string">'div.name'</span><span class="token punctuation">)</span><span class="token punctuation">[</span>totnum<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token property-access">textContent</span><span class="token operator">+</span><span class="token function">cw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">document</span><span class="token punctuation">.</span><span class="token method function property-access">querySelectorAll</span><span class="token punctuation">(</span><span class="token string">'div.name'</span><span class="token punctuation">)</span><span class="token punctuation">[</span>totnum<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token property-access">textContent</span><span class="token punctuation">;</span>
+ <span class="token dom variable">document</span><span class="token punctuation">.</span><span class="token method function property-access">querySelector</span><span class="token punctuation">(</span><span class="token string">'textarea#result'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">value</span> <span class="token operator">=</span> result<span class="token punctuation">;</span>
+ <span class="token function">reload</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+ <span class="token function">check</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> chktime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword keyword-function">function</span> <span class="token function">reload</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token keyword control-flow keyword-if">if</span> <span class="token punctuation">(</span>j <span class="token operator">&lt;</span> all<span class="token punctuation">.</span><span class="token property-access">length</span><span class="token punctuation">)</span> 
+<span class="token punctuation">{</span>
+  <span class="token keyword keyword-let">let</span> inputvalue<span class="token operator">=</span><span class="token string">"!test!\n"</span><span class="token punctuation">;</span>
+              name<span class="token operator">=</span>all<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token operator">+</span>suffix<span class="token punctuation">;</span>
+  <span class="token keyword control-flow keyword-if">if</span> <span class="token punctuation">(</span>type<span class="token operator">==</span><span class="token number">1</span><span class="token punctuation">)</span> inputvalue<span class="token operator">+=</span><span class="token string">"\n\n"</span><span class="token operator">+</span>name<span class="token punctuation">;</span>
+  <span class="token keyword control-flow keyword-if">if</span> <span class="token punctuation">(</span>type<span class="token operator">==</span><span class="token number">2</span><span class="token punctuation">)</span> inputvalue<span class="token operator">+=</span><span class="token string">"!\n\n"</span><span class="token operator">+</span>name<span class="token punctuation">;</span>
+  <span class="token keyword control-flow keyword-if">if</span> <span class="token punctuation">(</span>type<span class="token operator">==</span><span class="token number">3</span><span class="token punctuation">)</span> inputvalue<span class="token operator">+=</span><span class="token string">"!\n\n"</span><span class="token operator">+</span>name<span class="token operator">+</span><span class="token string">'\n'</span><span class="token operator">+</span>name<span class="token punctuation">;</span>
+  <span class="token keyword control-flow keyword-if">if</span> <span class="token punctuation">(</span>type<span class="token operator">==</span><span class="token number">4</span><span class="token punctuation">)</span> inputvalue<span class="token operator">+=</span><span class="token string">"\n\n"</span><span class="token operator">+</span>name<span class="token operator">+</span><span class="token string">"\n"</span><span class="token operator">+</span>name<span class="token punctuation">;</span>
+ <span class="token dom variable">document</span><span class="token punctuation">.</span><span class="token method function property-access">querySelector</span><span class="token punctuation">(</span><span class="token string">'#textdiv&gt;textarea'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">value</span> <span class="token operator">=</span>inputvalue<span class="token punctuation">;</span>
+ <span class="token dom variable">document</span><span class="token punctuation">.</span><span class="token method function property-access">querySelector</span><span class="token punctuation">(</span><span class="token string">'.goBtn'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword control-flow keyword-else">else</span> <span class="token punctuation">{</span>
+             fi <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword keyword-const">const</span> <span class="token constant">NW</span> <span class="token operator">=</span> <span class="token dom variable">document</span><span class="token punctuation">.</span><span class="token method function property-access">createElement</span><span class="token punctuation">(</span><span class="token string">'textarea'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token constant">NW</span><span class="token punctuation">.</span><span class="token property-access">id</span> <span class="token operator">=</span> <span class="token string">'result'</span><span class="token punctuation">;</span>
+<span class="token dom variable">document</span><span class="token punctuation">.</span><span class="token property-access">body</span><span class="token punctuation">.</span><span class="token method function property-access">appendChild</span><span class="token punctuation">(</span><span class="token constant">NW</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token constant">NW</span><span class="token punctuation">.</span><span class="token method function property-access">setAttribute</span><span class="token punctuation">(</span><span class="token string">'readonly'</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token dom variable">document</span><span class="token punctuation">.</span><span class="token method function property-access">getElementsByClassName</span><span class="token punctuation">(</span><span class="token string">'mdframe'</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token method function property-access">setAttribute</span><span class="token punctuation">(</span><span class="token string">'style'</span><span class="token punctuation">,</span>
+ <span class="token string">'display:none;'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">reload</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">check</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      </details>
+
+    </code></pre><h3 id="2.4.2">提升箱子的质量 </h3>
+    <p>很多时候箱子会过于多，而消耗大量的开箱时间。在核测号器刚出现的时候，仅仅以是否是三表作为开箱标准的话，开箱时间会远超过测号时间。因此，提升箱子质量的方法应运而生。目前主要有曙光筛和虚评两种策略。</p>
+    <h4 id="曙光筛">曙光筛 </h4>
+    <p>由于 pl 测号器可以得知不仅号的八围属性，还可以得知技能的熟练度，便可以根据技能进行一波筛选。<br>
+    比如八围不是很高而且技能总熟练度不是很高的可以排除掉，背刺熟练度高但是攻高防低的可以排除掉等。虽然这里举的例子是做减法，但实际的曙光筛是做加法，可以排除掉相当大一部分的大概率没用的号。</p>
+    <p>但是旧版曙光筛随着时代进步逐渐不那么准确或有用。后来推出了新版的曙光筛，但是是配合虚评（见下）使用的，通过的标准降低了很多。</p>
+    <p>注意：在使用 pl 测号器时不要使用曙光筛这一策略组！！！因为 pl 把曙光筛.dll 写挂了，可能导致无法运行！！！如果想使用曙光筛，请使用 pbb 测号器。</p>
+    <h4 id="虚评">虚评 </h4>
+    <p>由于测评分需要打千乃至万次对战，但是号的属性就只有那些，号的实力应该只和这些属性有关。因此想到利用这些数值进行评分的拟合。称为“虚评”。</p>
+    <p>虚评的大致原理是根据八围和熟练度这些属性的值和两两乘积（考虑到技能和属性之间的配合）总共近 1000 个参数进行线性拟合。除此之外还考虑了幻术号召唤出来的幻影属性，隐匿是否是 0 列为单独参数等。</p>
+    <p>在群文件里可以下载虚评相关代码。打开 <code>index.html</code> 便可以测虚评，第一个数值是强评拟合值（称为虚评），第二个数值是强单拟合值（称为虚单）。通过自己修改 <code>main.js</code> 代码可以增设阈值和技能提醒等。</p>
+    <p>值得注意的是，由于虚评和虚单的训练集都是比较强的常规名字，因此如果用虚评评测离训练集差距较大的名字可能会出现离谱的数值。</p>
+    <p>通过对号的虚评设阈值再开箱，可以大幅减少开箱的量。</p>
+    <p>虚评文件可以在 qq 群内下载。或者点击<a href="files/XP1015.zip" download="XP.zip">这里</a>下载。</p>
+    <h3 id="2.4.3">超强单与超强评 </h3>
+    <p>通过强评和强单，我们可以大致知道一个号的组队能力和单挑能力。但是值得注意的是这是对天卫的组队水平和单挑水平，和实际与大部分玩家对战的情况并不一样。因此我们可以通过收集主流玩家的单挑号或者多人组作为“靶子”，测对这些号/多人组的胜率的平均值，来获得更合理的实战水平评估。</p>
+    <p>靶子的链接（有可能会时不时更新）：<a href="https://www.luogu.com/paste/0lx16qoq">https://www.luogu.com/paste/0lx16qoq</a>。或者点击<a href="target.html">这里</a>（不一定实时更新）。或者最下方的脚本可以像开箱那样测多个号/多人组的超强单/超强评。使用方法：一行一个号/多人组，多人组每个号之间用一个单独的<code>+</code>字符连接。</p>
+    <h2 id="2.5">2.5 测号单位制与出号率 </h2>
+    <p>基于当前主流的测号速度，我们选择 <strong>T(<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><msup><mn>0</mn><mn>12</mn></msup></mrow><annotation encoding="application/x-tex">10^{12}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">12</span></span></span></span></span></span></span></span></span></span></span></span>)</strong> 作为测号量的计量单位。</p>
+    <p>请注意，1T 在中文中的表述是 <strong>一万亿</strong>，而非一千亿。</p>
+    <p>根据玩家群体的经验，期望下出一个强评（强化组队评分）6000 的号需要略低于 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.5</mn><mi>T</mi></mrow><annotation encoding="application/x-tex">0.5T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">0.5</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span> 的测号量，而该评分每增加 100，期望测号量便会翻三倍，这被称为 <strong>三倍定律</strong>。可以利用三倍定律大致预估测出某个强度的号所需要的时间。</p>
+    <p>对于尖端评分（如 6400 以上），由于数据过少，不能大致确定期望测号量的增加速度，但应该在三倍以上。</p>
+    <p>请注意：出不出得了尖端号始终是取决于运气的事情，名竞也不具有一般抽卡游戏的“保底”特性，因此这些期望值始终仅能供你参考。</p>
+    <a href="index.html">返回目录</a>
+</div>
+  
+    
+
