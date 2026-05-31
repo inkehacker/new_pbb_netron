@@ -449,8 +449,9 @@ fn process_names(
             }
         }
 
-        // Build name_bytes from tmp (just the name part, no suffix for shuffling)
-        let name_bytes: Vec<u8> = tmp[..total_len_for_shuffle].iter().map(|&b| b as u8).collect();
+        // Build name_bytes from tmp (just the name part, with null terminator)
+        let mut name_bytes: Vec<u8> = tmp[..total_len_for_shuffle].iter().map(|&b| b as u8).collect();
+        name_bytes.push(0);
 
         // Compute val_base2 (team + prefix shuffle)
         let mut val_base2 = [0u8; N];
