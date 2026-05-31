@@ -1,320 +1,277 @@
-/// Rand structure - the PRNG used for skill shuffling
-/// Matches the C++ struct: a, b (indices), c (256-byte permutation table)
-#[derive(Clone)]
-pub struct Rand {
-    a: usize,
-    b: usize,
-    c: [u8; 256],
+pub const N: usize = 256;
+
+#[derive(Clone, Copy, Debug, Default)]
+pub struct SkillSlot {
+    pub id: u8,
+    pub freq: u8,
 }
 
-impl Rand {
-    pub fn new(_a: u8, _b: u8, val: &[u8; 256]) -> Self {
-        let a = _a as usize;
-        let b = _b as usize;
-        let mut c = [0u8; 256];
-        c.copy_from_slice(val);
-        Self { a, b, c }
-    }
-
-    pub fn next_byte(&mut self) -> u8 {
-        self.a = (self.a + 1) % 256;
-        self.b = (self.b + self.c[self.a] as usize) % 256;
-        self.c.swap(self.a, self.b);
-        self.c[(self.c[self.a] as usize + self.c[self.b] as usize) & 0xFF]
-    }
-
-    pub fn next(&mut self, limit: i32) -> i32 {
-        if limit == 0 {
-            return 0;
-        }
-        let mut u = self.next_byte() as i32;
-        u = ((u << 8) | self.next_byte() as i32) % limit;
-        u
-    }
-}
-
-/// Skill structure
-#[derive(Clone, Debug, Default)]
-pub struct Skill {
-    pub id: i32,
-    pub freq: i32,
-    pub gained: bool,
-}
-
-/// Name structure - represents a full name with team
-#[derive(Clone)]
 pub struct Name {
-    pub val: [u8; 256],
-    pub namebase: [u8; 128],
-    pub namebonus: [u8; 128],
-    pub props: [i32; 8], // HP, Atk, Def, Spd, Dex, Mag, Res, Int
-    pub skills: [Skill; 16],
-    pub skill_order: [i32; 16], // skill IDs for each of the 16 slots
-    pub raw_name: String,
+    pub val: [u8; N],
+    pub name_base: [u8; 128],
+    pub skill: [SkillSlot; 16],
+    pub raw_skill: [u8; 40],
+    pub v_sum: u32,
 }
 
 impl Name {
     pub fn new() -> Self {
-        Self {
-            val: [0u8; 256],
-            namebase: [0u8; 128],
-            namebonus: [0u8; 128],
-            props: [0i32; 8],
-            skills: [Skill::default(); 16],
-            skill_order: [0i32; 16],
-            raw_name: String::new(),
+        Name {
+            val: [0; N],
+            name_base: [0; 128],
+            skill: [SkillSlot::default(); 16],
+            raw_skill: [0; 40],
+            v_sum: 0,
         }
     }
-
-    pub fn hp(&self) -> i32 { self.props[0] }
-    pub fn atk(&self) -> i32 { self.props[1] }
-    pub fn def(&self) -> i32 { self.props[2] }
-    pub fn spd(&self) -> i32 { self.props[3] }
-    pub fn dex(&self) -> i32 { self.props[4] }
-    pub fn mag(&self) -> i32 { self.props[5] }
-    pub fn res(&self) -> i32 { self.props[6] }
-    pub fn int(&self) -> i32 { self.props[7] }
-
-    pub fn get_skill_freq(&self, id: i32) -> i32 {
-        for i in 0..16 {
-            if self.skill_order[i] == id && id < 35 {
-                return self.skills[i].freq;
-            }
-        }
-        0
-    }
-
-    pub fn total_skill_sum(&self) -> i32 {
-        self.skills.iter().map(|s| s.freq).sum()
-    }
-
-    /// 八围 (eight stats) calculation: (atk+def+spd+dex+mag+res+int) + HP/3
-    pub fn ba_wei(&self) -> i32 {
-        self.atk() + self.def() + self.spd() + self.dex() + self.mag() + self.res() + self.int() + self.hp() / 3
-    }
 }
 
-/// Initialize val array with 0..255
-fn init_val(val: &mut [u8; 256]) {
-    for i in 0..256 {
-        val[i] = i as u8;
-    }
-}
-
-/// Shuffle val based on a byte sequence (team name or name body)
-fn shuffle_val(val: &mut [u8; 256], bytes: &[u8]) {
-    let mut s: u8 = 0;
-    for i in 0..256 {
-        s = s.wrapping_add(bytes[i % bytes.len()].wrapping_add(val[i]));
-        val.swap(i, s as usize);
-    }
-}
-
-/// Load a name string (name@team format) into val and compute namebase
-pub fn load_name(name_in: &str) -> Option<Name> {
-    let mut name = Name::new();
-    name.raw_name = name_in.to_string();
-
-    // Split at @
-    let parts: Vec<&str> = name_in.rsplitn(2, '@').collect();
-    let (name_body, team_name) = if parts.len() >= 2 && !parts[1].is_empty() {
-        (parts[0], parts[1])
+#[inline(always)]
+pub fn median3(a: u8, b: u8, c: u8) -> u8 {
+    if a < b {
+        if a < c { if b < c { b } else { c } }
+        else { a }
     } else {
-        (name_in, name_in)
-    };
-
-    let name_bytes = name_body.as_bytes();
-    let team_bytes = team_name.as_bytes();
-
-    if name_bytes.is_empty() || team_bytes.is_empty() {
-        return None;
-    }
-
-    // Build byte sequences with leading 0
-    let mut name_seq = vec![0u8];
-    name_seq.extend_from_slice(name_bytes);
-    let mut team_seq = vec![0u8];
-    team_seq.extend_from_slice(team_bytes);
-
-    // Initialize and shuffle val
-    init_val(&mut name.val);
-    shuffle_val(&mut name.val, &team_seq);
-    shuffle_val(&mut name.val, &name_seq);
-    shuffle_val(&mut name.val, &name_seq);
-
-    // Compute namebase from val
-    let mut bonus_len = 0;
-    for i in 0..256 {
-        let m = name.val[i].wrapping_mul(181).wrapping_add(160);
-        if m >= 89 && m < 217 {
-            name.namebase[bonus_len] = m & 63;
-            bonus_len += 1;
-        }
-    }
-
-    // Copy namebase to namebonus
-    name.namebonus.copy_from_slice(&name.namebase);
-
-    // Compute properties
-    compute_props(&mut name);
-
-    // Compute skills
-    compute_skills(&mut name);
-
-    Some(name)
-}
-
-/// Compute properties from namebonus (first 32 items)
-fn compute_props(name: &mut Name) {
-    let mut r: [u8; 32] = [0; 32];
-    r.copy_from_slice(&name.namebonus[..32]);
-
-    // HP: sort first 10, sum middle 4 (indices 3..7), +154
-    r[0..10].sort();
-    name.props[0] = 154 + r[3] as i32 + r[4] as i32 + r[5] as i32 + r[6] as i32;
-
-    // Other 7 stats: each uses 3 items, take median, +36
-    let stat_indices: [(usize, usize, usize); 7] = [
-        (10, 11, 12), // Atk
-        (13, 14, 15), // Def
-        (16, 17, 18), // Spd
-        (19, 20, 21), // Dex
-        (22, 23, 24), // Mag
-        (25, 26, 27), // Res
-        (28, 29, 30), // Int
-    ];
-
-    for (i, &(a, b, c)) in stat_indices.iter().enumerate() {
-        let arr = [r[a], r[b], r[c]];
-        name.props[i + 1] = median3(arr) as i32 + 36;
+        if b < c { if a < c { a } else { c } }
+        else { b }
     }
 }
 
-/// Compute skills from namebonus (items 64..128)
-fn compute_skills(name: &mut Name) {
-    // Initialize skill IDs 0..39
-    let mut skill_ids: [i32; 40] = std::array::from_fn(|i| i as i32);
-
-    // Shuffle skill IDs using val
-    let mut rand = Rand::new(0, 0, &name.val);
-    let mut s: i32 = 0;
-    for _ in 0..2 {
-        for j in 0..40 {
-            s = (s + rand.next(40) + skill_ids[j]) % 40;
-            skill_ids.swap(j as usize, s as usize);
-        }
-    }
-
-    // Take first 16 skills
-    let a = &name.namebonus[64..128];
-    let b = &name.namebase[64..128];
-
-    let mut last: i32 = -1;
-    let mut j = 0;
-
-    for i in (0..64).step_by(4) {
-        let p = a[i..i + 4].iter().cloned().min().unwrap();
-        let q = b[i..i + 4].iter().cloned().min().unwrap();
-
-        name.skills[j].id = skill_ids[j];
-        name.skill_order[j] = skill_ids[j];
-
-        if p > 10 {
-            if skill_ids[j] < 35 {
-                name.skills[j].freq = p as i32 - 10;
-            }
-            if q <= 10 {
-                // Skill gained from team bonus, skip tail bonus
-                name.skills[j].gained = true;
-            } else if skill_ids[j] < 25 {
-                last = j as i32;
-            }
-        }
-
-        j += 1;
-    }
-
-    // Last active skill: double frequency
-    if last != -1 {
-        name.skills[last as usize].gained = true;
-        name.skills[last as usize].freq *= 2;
-    }
-
-    // Tail bonus for skill slot 14 and 15
-    for idx in [14, 15] {
-        if name.skills[idx].freq > 0 && !name.skills[idx].gained {
-            let bonus = name.namebonus[60 + (idx - 14) * 2].min(name.namebonus[61 + (idx - 14) * 2]) as i32;
-            name.skills[idx].freq += bonus.min(name.skills[idx].freq);
-            name.skills[idx].gained = true;
-        }
-    }
-}
-
-fn median3(arr: [u8; 3]) -> u8 {
-    let mut a = arr;
-    a.sort();
-    a[1]
-}
-
-/// Team bonus calculation: scan namebase and update namebonus
-pub fn apply_team_bonus(names: &mut [Name]) {
-    let n = names.len();
-    for i in 0..n {
-        let base_i: [u8; 128] = names[i].namebase;
-        for j in (i + 1)..n {
-            // i gets bonus from j
-            apply_bonus_pair(&mut names[i], &names[j].namebase);
-            // j gets bonus from i
-            apply_bonus_pair(&mut names[j], &base_i);
-        }
-    }
-    // Recompute props and skills after bonus
-    for name in names.iter_mut() {
-        compute_props(name);
-        compute_skills(name);
-    }
-}
-
-fn apply_bonus_pair(target: &mut Name, other_base: &[u8; 128]) {
-    for i in 7..128 {
-        if other_base[i - 1] == target.namebase[i] && other_base[i - 1] > other_base[i] {
-            target.namebonus[i] = target.namebonus[i].max(other_base[i]);
-        }
-    }
-}
-
-/// Fast property-only computation (without full skill computation)
-/// Used for early pruning in miners
-pub fn compute_props_fast(namebase: &[u8; 128]) -> [i32; 8] {
-    let mut r: [u8; 32] = [0; 32];
-    r.copy_from_slice(&namebase[..32]);
-
-    let mut props = [0i32; 8];
-
-    r[0..10].sort();
-    props[0] = 154 + r[3] as i32 + r[4] as i32 + r[5] as i32 + r[6] as i32;
-
-    let stat_indices: [(usize, usize, usize); 7] = [
-        (10, 11, 12), (13, 14, 15), (16, 17, 18), (19, 20, 21),
-        (22, 23, 24), (25, 26, 27), (28, 29, 30),
-    ];
-
-    for (i, &(a, b, c)) in stat_indices.iter().enumerate() {
-        let arr = [r[a], r[b], r[c]];
-        props[i + 1] = median3(arr) as i32 + 36;
-    }
-
+#[inline(always)]
+pub fn compute_props(name_base: &[u8; 128]) -> [u32; 8] {
+    let mut props = [0u32; 8];
+    props[0] = median3(name_base[10], name_base[11], name_base[12]) as u32;
+    props[1] = median3(name_base[13], name_base[14], name_base[15]) as u32;
+    props[2] = median3(name_base[16], name_base[17], name_base[18]) as u32;
+    props[3] = median3(name_base[19], name_base[20], name_base[21]) as u32;
+    props[4] = median3(name_base[22], name_base[23], name_base[24]) as u32;
+    props[5] = median3(name_base[25], name_base[26], name_base[27]) as u32;
+    props[6] = median3(name_base[28], name_base[29], name_base[30]) as u32;
+    props[7] = (154u32 + name_base[3] as u32 + name_base[4] as u32
+        + name_base[5] as u32 + name_base[6] as u32) / 3;
     props
 }
 
-pub fn median_u8(a: u8, b: u8, c: u8) -> u8 {
-    if a <= b {
-        if b <= c { b }
-        else if a <= c { c }
-        else { a }
-    } else {
-        if a <= c { a }
-        else if b <= c { c }
-        else { b }
+pub fn load_team(val_base: &mut [u8; N], team_bytes: &[i8]) {
+    let t_len = team_bytes.len() + 1;
+    for i in 0..N { val_base[i] = i as u8; }
+    let mut s: u8 = 0;
+    for i in 0..N {
+        if i % t_len != 0 {
+            s = s.wrapping_add(team_bytes[i % t_len - 1] as u8);
+        }
+        s = s.wrapping_add(val_base[i]);
+        val_base.swap(i, s as usize);
     }
+}
+
+#[inline(always)]
+pub fn load_name_fast(
+    val_base2: &[u8; N],
+    pre_len: usize,
+    total_len: usize,
+    name_bytes: &[u8],
+    name_base: &mut [u8; 128],
+) -> Option<u32> {
+    let mut val = *val_base2;
+
+    let mut j_prefix: isize = total_len as isize;
+    let mut s_prefix: u8 = 0;
+    for _i in 0..pre_len {
+        let jv = j_prefix as usize;
+        let bv = if jv <= total_len && jv < name_bytes.len() { name_bytes[jv] } else { 0 };
+        s_prefix = s_prefix.wrapping_add(bv).wrapping_add(val_base2[_i]);
+        j_prefix += 1;
+        if j_prefix == total_len as isize { j_prefix = -1; }
+    }
+
+    let mut j_first = j_prefix;
+    if j_first < 0 { j_first = 0; }
+    if pre_len == 0 { j_first = total_len as isize; }
+
+    let mut s = s_prefix;
+    for i_idx in pre_len..N {
+        let j_usize = j_first as usize;
+        let bv = if j_usize <= total_len && j_usize < name_bytes.len() { name_bytes[j_usize] } else { 0 };
+        s = s.wrapping_add(bv).wrapping_add(val[i_idx]);
+        val.swap(i_idx, s as usize);
+        j_first += 1;
+        if j_first == total_len as isize { j_first = -1; }
+    }
+
+    s = 0;
+    let mut j_second = total_len as isize;
+    for i in 0..N {
+        let j_usize = j_second as usize;
+        let bv = if j_usize <= total_len && j_usize < name_bytes.len() { name_bytes[j_usize] } else { 0 };
+        s = s.wrapping_add(bv).wrapping_add(val[i]);
+        val.swap(i, s as usize);
+        j_second += 1;
+        if j_second == total_len as isize { j_second = -1; }
+    }
+
+    let mut q_len: isize = -1;
+
+    for i in (0..96).step_by(8) {
+        let u0 = val[i].wrapping_mul(181).wrapping_add(160);
+        let u1 = val[i+1].wrapping_mul(181).wrapping_add(160);
+        let u2 = val[i+2].wrapping_mul(181).wrapping_add(160);
+        let u3 = val[i+3].wrapping_mul(181).wrapping_add(160);
+        let u4 = val[i+4].wrapping_mul(181).wrapping_add(160);
+        let u5 = val[i+5].wrapping_mul(181).wrapping_add(160);
+        let u6 = val[i+6].wrapping_mul(181).wrapping_add(160);
+        let u7 = val[i+7].wrapping_mul(181).wrapping_add(160);
+
+        if u0 >= 89 && u0 < 217 { q_len += 1; name_base[q_len as usize] = u0 & 63; }
+        if u1 >= 89 && u1 < 217 { q_len += 1; name_base[q_len as usize] = u1 & 63; }
+        if u2 >= 89 && u2 < 217 { q_len += 1; name_base[q_len as usize] = u2 & 63; }
+        if u3 >= 89 && u3 < 217 { q_len += 1; name_base[q_len as usize] = u3 & 63; }
+        if u4 >= 89 && u4 < 217 { q_len += 1; name_base[q_len as usize] = u4 & 63; }
+        if u5 >= 89 && u5 < 217 { q_len += 1; name_base[q_len as usize] = u5 & 63; }
+        if u6 >= 89 && u6 < 217 { q_len += 1; name_base[q_len as usize] = u6 & 63; }
+        if u7 >= 89 && u7 < 217 { q_len += 1; name_base[q_len as usize] = u7 & 63; }
+        if q_len >= 30 { break; }
+    }
+
+    if q_len < 30 {
+        for i in (96..N).step_by(8) {
+            let u0 = val[i].wrapping_mul(181).wrapping_add(160);
+            let u1 = val[i+1].wrapping_mul(181).wrapping_add(160);
+            let u2 = val[i+2].wrapping_mul(181).wrapping_add(160);
+            let u3 = val[i+3].wrapping_mul(181).wrapping_add(160);
+            let u4 = val[i+4].wrapping_mul(181).wrapping_add(160);
+            let u5 = val[i+5].wrapping_mul(181).wrapping_add(160);
+            let u6 = val[i+6].wrapping_mul(181).wrapping_add(160);
+            let u7 = val[i+7].wrapping_mul(181).wrapping_add(160);
+
+            if u0 >= 89 && u0 < 217 { q_len += 1; name_base[q_len as usize] = u0 & 63; }
+            if u1 >= 89 && u1 < 217 { q_len += 1; name_base[q_len as usize] = u1 & 63; }
+            if u2 >= 89 && u2 < 217 { q_len += 1; name_base[q_len as usize] = u2 & 63; }
+            if u3 >= 89 && u3 < 217 { q_len += 1; name_base[q_len as usize] = u3 & 63; }
+            if u4 >= 89 && u4 < 217 { q_len += 1; name_base[q_len as usize] = u4 & 63; }
+            if u5 >= 89 && u5 < 217 { q_len += 1; name_base[q_len as usize] = u5 & 63; }
+            if u6 >= 89 && u6 < 217 { q_len += 1; name_base[q_len as usize] = u6 & 63; }
+            if u7 >= 89 && u7 < 217 { q_len += 1; name_base[q_len as usize] = u7 & 63; }
+            if q_len >= 30 { break; }
+        }
+    }
+
+    if q_len < 30 { return None; }
+
+    let mut v: u32 = 0;
+    v += median3(name_base[28], name_base[29], name_base[30]) as u32;
+    if v < 24 { return None; }
+    v += median3(name_base[13], name_base[14], name_base[15]) as u32;
+    v += median3(name_base[16], name_base[17], name_base[18]) as u32;
+    v += median3(name_base[25], name_base[26], name_base[27]) as u32;
+    if v < 165 { return None; }
+    v += median3(name_base[10], name_base[11], name_base[12]) as u32;
+    v += median3(name_base[19], name_base[20], name_base[21]) as u32;
+    v += median3(name_base[22], name_base[23], name_base[24]) as u32;
+    if v < 250 { return None; }
+
+    let mut sorted10 = [0u8; 10];
+    sorted10.copy_from_slice(&name_base[0..10]);
+    sorted10.sort_unstable();
+    v += (154u32 + sorted10[3] as u32 + sorted10[4] as u32 + sorted10[5] as u32 + sorted10[6] as u32) / 3;
+
+    Some(v)
+}
+
+#[inline(always)]
+pub fn fill_full_namebase(val: &[u8; N], name_base: &mut [u8; 128]) -> usize {
+    let mut q_len: isize = -1;
+    for i in 0..N {
+        let u = val[i].wrapping_mul(181).wrapping_add(160);
+        if u >= 89 && u < 217 {
+            q_len += 1;
+            if q_len < 128 {
+                name_base[q_len as usize] = u & 63;
+            }
+        }
+    }
+    q_len as usize
+}
+
+#[inline(always)]
+pub fn calc_skills(val: &mut [u8; N], name_base: &mut [u8; 128], skill: &mut [SkillSlot; 16]) {
+    let mut s: u8 = 0;
+    for i in 0..N {
+        let j = i % 128;
+        s = s.wrapping_add(name_base[j]).wrapping_add(val[i]);
+        val.swap(i, s as usize);
+    }
+
+    for i in 0..128 { name_base[i] = 0; }
+
+    let mut n_len: usize = 0;
+    for i in 0..40 {
+        loop {
+            if n_len >= 40 { break; }
+            let v = val[n_len];
+            n_len += 1;
+            if v != 0 && v < 36 {
+                name_base[i] = v;
+                break;
+            }
+        }
+    }
+
+    let mut freq = [0u8; 35];
+    let mut skill_count: usize = 0;
+    for i in 0..40 {
+        let id = name_base[i] as usize;
+        if id > 0 {
+            freq[id] += 1;
+            if freq[id] == 1 { skill_count += 1; }
+        }
+    }
+
+    for i in 0..skill_count.min(16) {
+        let id = name_base[i];
+        let freq_val = freq[id as usize] * 100 / skill_count as u8;
+        skill[i] = SkillSlot { id, freq: freq_val };
+    }
+
+    if skill_count > 0 && skill_count <= 16 {
+        let last_idx = skill_count - 1;
+        if last_idx < 16 {
+            skill[last_idx].freq *= 2;
+        }
+    }
+
+    if skill_count < 16 {
+        for i in skill_count..16 {
+            skill[i] = SkillSlot { id: 0, freq: 0 };
+        }
+    }
+}
+
+#[inline(always)]
+pub fn loading_name(val: &mut [u8; N], val_base: &[u8; N], name_bytes: &[u8]) -> [u32; 8] {
+    val.copy_from_slice(val_base);
+    let name_len = name_bytes.len();
+    let mut s: u8 = 0;
+    for i in 0..N {
+        let j = i % name_len;
+        s = s.wrapping_add(name_bytes[j]).wrapping_add(val[i]);
+        val.swap(i, s as usize);
+    }
+    s = 0;
+    for i in 0..N {
+        let j = i % name_len;
+        s = s.wrapping_add(name_bytes[j]).wrapping_add(val[i]);
+        val.swap(i, s as usize);
+    }
+    let mut name_base = [0u8; 128];
+    let mut q_len: usize = 0;
+    for i in 0..N {
+        let u = val[i].wrapping_mul(181).wrapping_add(160);
+        if u >= 89 && u < 217 {
+            name_base[q_len] = u & 63;
+            q_len += 1;
+            if q_len >= 128 { break; }
+        }
+    }
+    compute_props(&name_base)
 }

@@ -3,14 +3,23 @@ name = "rust_pbb"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "rust_pbb"
+path = "src/main.rs"
+
+[lib]
+name = "rust_pbb"
+path = "src/lib.rs"
+
 [dependencies]
 rand = "0.8"
-rayon = "1.10"
+rand_chacha = "0.3"
 crossbeam-channel = "0.5"
-num_cpus = "1.0"
+num_cpus = "1.16"
 chrono = "0.4"
 
 [profile.release]
 opt-level = 3
-lto = true
+lto = "fat"
 codegen-units = 1
+strip = true
