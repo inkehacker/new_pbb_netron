@@ -217,7 +217,7 @@ pub fn calc_skills(val: &mut [u8; N], name_base: &mut [u8; 128], skill: &mut [Sk
         }
     }
 
-    let mut freq = [0u8; 35];
+    let mut freq = [0u8; 36];
     let mut skill_count: usize = 0;
     for i in 0..40 {
         let id = name_base[i] as usize;

@@ -695,7 +695,8 @@ fn process_name_v_high(
     }
 
     if xp_x[32] > 0.0 {
-        let mut shadow_bytes = tmr_bytes.clone();
+        let mut shadow_bytes = vec![0u8; tmr_len + 8];
+        for i in 0..tmr_len { shadow_bytes[i] = tmr_bytes[i]; }
         shadow_bytes[tmr_len] = b'?';
         shadow_bytes[tmr_len + 1] = b's';
         shadow_bytes[tmr_len + 2] = b'h';
